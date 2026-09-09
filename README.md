@@ -23,6 +23,8 @@
 ```bash
 cd CandidateTest
 npm install
+$env:JWT_SECRET = "local-dev-secret"
+$env:PORT = "3000"
 npm run start:dev
 ```
 
@@ -90,10 +92,6 @@ Jest + ts-jest. הבדיקות מכסות את המקרים המשמעותיים
 **Frontend – Angular** (מתוך האפשרויות Angular / React בדרישות). Standalone
 components + signals לניהול state פשוט וללא תלות ב-NgModules.
 
-**מאגר נתונים – in-memory.** 500 רשומות נזרעות דטרמיניסטית באתחול
-([`request.repository.ts`](CandidateTest/src/requests/request.repository.ts)).
-מספיק להדגמה מקומית; ראה למטה כיצד זה מתוכנן להתרחב.
-
 ---
 
 ## הנחות שביצעתי
@@ -106,7 +104,6 @@ components + signals לניהול state פשוט וללא תלות ב-NgModules.
    לפני כל סינון אחר, כך שאי אפשר לעקוף אותה דרך פרמטרי query.
 3. **סינון תאריכים** מתייחס ל-`createdAt` בלבד (טווח תאריכי *יצירה*). `toDate` בפורמט
    `YYYY-MM-DD` נחשב עד סוף היום כולל; `fromDate` מאוחר מ-`toDate` נחשב קלט לא חוקי (`400`).
-4. הנתונים נזרעים עם seed קבוע כדי שההתנהגות תהיה יציבה בין הרצות ובדיקות.
 
 ---
 
