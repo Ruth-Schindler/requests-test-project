@@ -1,0 +1,65 @@
+<div class="login-shell">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="brand">
+        <div class="brand-mark">מ</div>
+        <span>מרכז<span class="brand-dot">.</span>פניות</span>
+      </div>
+      <span class="eyebrow">גישה למערכת</span>
+      <h1>כניסה למערכת</h1>
+      <p>בחרו את סוג המשתמש כדי להמשיך למרכז הפניות.</p>
+    </div>
+
+    <div class="role-grid" role="radiogroup" aria-label="בחירת סוג משתמש">
+      <button
+        type="button"
+        class="role-option"
+        role="radio"
+        [attr.aria-checked]="selectedRole() === 'admin'"
+        [class.active]="selectedRole() === 'admin'"
+        (click)="selectRole('admin')">
+        <span class="role-icon">מ</span>
+        <span class="role-text">
+          <strong>מנהל</strong>
+          <small>גישה מלאה לניהול הפניות</small>
+        </span>
+        <span class="role-check" aria-hidden="true"></span>
+      </button>
+
+      <button
+        type="button"
+        class="role-option"
+        role="radio"
+        [attr.aria-checked]="selectedRole() === 'user'"
+        [class.active]="selectedRole() === 'user'"
+        (click)="selectRole('user')">
+        <span class="role-icon">ש</span>
+        <span class="role-text">
+          <strong>משתמש</strong>
+          <small>גישה בהתאם למזהה המשתמש</small>
+        </span>
+        <span class="role-check" aria-hidden="true"></span>
+      </button>
+
+      <button
+        type="button"
+        class="role-option demo-option"
+        role="radio"
+        [attr.aria-checked]="selectedRole() === 'demo'"
+        [class.active]="selectedRole() === 'demo'"
+        (click)="selectRole('demo')">
+        <span class="role-icon demo-icon">D</span>
+        <span class="role-text">
+          <strong>משתמש דמו</strong>
+          <small>כניסה מהירה עם משתמש דמו</small>
+        </span>
+        <span class="role-check" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <button type="button" class="btn btn-primary login-submit" (click)="continueToDashboard()">
+      המשך למערכת
+      <span class="submit-arrow" aria-hidden="true">←</span>
+    </button>
+  </div>
+</div>

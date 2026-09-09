@@ -1,0 +1,108 @@
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">מ</div>
+      <span>מרכז<span class="brand-dot">.</span>פניות</span>
+    </div>
+    <div class="topbar-right">
+      <span class="sync-status"><i></i> מחובר לשרת</span>
+      <button class="logout-btn" type="button" (click)="logOut()">התנתק</button>
+      <div class="avatar">{{ role === 'admin' ? 'מ' : 'ש' }}</div>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="page-header">
+      <div>
+        <span class="eyebrow">מערכת שירות / פניות</span>
+        <h1>מרכז הפניות</h1>
+        <p>צפו, סננו ונהלו את כל הפניות ממקום אחד.</p>
+      </div>
+      <span class="server-label">{{ role === 'admin' ? 'API · admin' : 'API · user' }}</span>
+    </div>
+
+    <app-filter-panel #filters (apply)="applyFilters()" (reset)="resetFilters()"></app-filter-panel>
+
+    <section class="results-card">
+      <div class="results-header">
+        <div>
+          <div class="results-title">
+            <h2>כל הפניות</h2>
+            <span class="count-badge">{{ requests().length }}</span>
+          </div>
+          <p class="muted">הנתונים נטענים ישירות משרת הפניות</p>
+        </div>
+        <div class="sort-controls">
+          <label>מיין לפי
+            <select [ngModel]="sortField()" (ngModelChange)="changeSortField($event)">
+              <option value="createdAt">תאריך יצירה</option>
+              <option value="requestNumber">מספר פנייה</option>
+            </select>
+          </label>
+          <button class="direction-btn" (click)="toggleDirection()">
+            <span>{{ sortDirection() === 'asc' ? '↑' : '↓' }}</span>{{ sortDirection() === 'asc' ? 'עולה' : 'יורד' }}
+          </button>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="skeleton-list">
+          <div class="skeleton-row" *ngFor="let row of skeletonRows"><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+      } @else if (error()) {
+        <div class="state-panel error-panel">
+          <div class="state-icon error-icon">!</div>
+          <h3>לא הצלחנו להתחבר לשרת</h3>
+          <p>ודאו ששרת Node פועל בכתובת localhost:3000.</p>
+          <button class="btn btn-primary" (click)="load()">נסה שוב</button>
+        </div>
+      } @else if (requests().length === 0) {
+        <div class="state-panel">
+          <div class="state-icon empty-icon">⌕</div>
+          <h3>לא נמצאו פניות</h3>
+          <p>נסו לשנות את המסננים או את מונח החיפוש.</p>
+          <button class="btn btn-ghost" (click)="resetFilters()">נקה את כל המסננים</button>
+        </div>
+      } @else {
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>מספר פנייה</th>
+                <th>לקוח</th>
+                <th>בעלים</th>
+                <th>סוג פנייה</th>
+                <th>סטטוס</th>
+                <th>נוצרה</th>
+                <th>עודכן</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let request of requests(); let i = index" class="table-row" [style.animation-delay.ms]="i * 25">
+                <td>
+                  <strong class="request-number">{{ request.requestNumber }}</strong>
+                  <span class="request-id">#{{ request.id }}</span>
+                </td>
+                <td>{{ request.customerId }}</td>
+                <td>
+                  <span class="owner">{{ request.ownerId }}</span>
+                  <small>{{ request.assignedToUserId === null ? 'לא משויך' : 'משתמש ' + request.assignedToUserId }}</small>
+                </td>
+                <td><span class="category-label"><i class="category-dot" [class]="'category-dot cat-' + request.requestType"></i>{{ requestTypeLabels[request.requestType] }}</span></td>
+                <td><span class="status-badge" [class]="'status-' + request.status"><i></i>{{ statusLabels[request.status] }}</span></td>
+                <td class="date">{{ request.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td class="date">{{ request.updatedAt | date:'dd/MM/yyyy HH:mm' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <app-pagination [count]="requests().length" [page]="page()" [pageSize]="pageSize()" [hasMore]="hasMore()" (prev)="prevPage()" (next)="nextPage()" (sizeChange)="changePageSize($event)"></app-pagination>
+      }
+    </section>
+
+    <footer>
+      <span>מרכז הפניות</span>
+      <span>מקור נתונים: {{ role === 'admin' ? 'Node API · admin' : 'Node API · user' }}</span>
+    </footer>
+  </main>
+</div>
